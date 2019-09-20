@@ -19,7 +19,7 @@ PUSH_URL = "https://push.ubports.com/notify"
 HEADERS = {"Content-Type" : "application/json"}
 
 card = {
-    "icon" : "notification",
+    "icon" : "message",
     "body" : "",
     "summary" : "Messenger",
     "popup" : True,
@@ -64,13 +64,22 @@ class CustomClient(Client):
     def onMessage(self, mid, author_id, message_object, thread_id, thread_type, ts, metadata, msg, **kwargs):
         if not DEBUG and author_id == self.uid:
             return
+        
+        user = self.fetchUserInfo(author_id)[author_id]
+        log(f'Message from:\n{str(user)}\n')
+        name = 'noname'
+        if user.nickname:
+            name = user.nickname
+        elif user.name:
+            name = user.name
+        
         dt = datetime.now() + timedelta(days=1)
         dt_str = dt.strftime("%Y-%m-%dT%H:%M:00.000Z")
         if message_object:
             if message_object.text:
-                body = message_object.text[:15]
+                body = f'{name}: {message_object.text[:23]}'
             else:
-                body = "Media content received"
+                body = f'{name} sent media content.'
             params["expire_on"] = dt_str
             params["data"]["notification"]["card"]["body"] = body
             json_data = json.dumps(params)
