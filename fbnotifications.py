@@ -15,7 +15,7 @@ LOG_FILENAME = "debug.log"
 USER = "<your facebook login email>"
 PASSWORD = "<your facebook login password>"
 
-UBUNTU_ONE_URL = "https://push.ubports.com/notify"
+PUSH_URL = "https://push.ubports.com/notify"
 HEADERS = {"Content-Type" : "application/json"}
 
 card = {
@@ -75,7 +75,7 @@ class CustomClient(Client):
             params["data"]["notification"]["card"]["body"] = body
             json_data = json.dumps(params)
             log(f'Data sent:\n {json_data}\n')
-            r = requests.post(url=UBUNTU_ONE_URL, headers=HEADERS, data=json_data)
+            r = requests.post(url=PUSH_URL, headers=HEADERS, data=json_data)
             log(r.json())
 
 ##################### MAIN #####################
